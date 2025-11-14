@@ -4,10 +4,12 @@
 
 #pragma once
 
-
-struct Node {
-public:
-    int data;
+template <typename T>
+struct Node{
+    T data;
     Node* next;
 };
+
+
+
 

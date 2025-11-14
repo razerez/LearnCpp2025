@@ -6,63 +6,65 @@
 
 namespace Logic
 {
-    Node *head = nullptr;
-
-    void LinkedList::Append(Node *member)
+template <typename T> void LinkedList<T>::Append(T value)
+{
+    auto newMember = new Node<T>{value};
+    if (head == nullptr)
     {
-        if (head == nullptr)
+        head = newMember;
+        head->next = nullptr;
+        return;
+    }
+
+    Node<T> *last = Last();
+    if (last->next != nullptr)
+    {
+        std::__throw_bad_exception();
+    }
+    last->next = &newMember;
+}
+
+template <typename T> void LinkedList<T>::Prepend(T member)
+{
+    auto newMember = new Node<T>{member};
+    member->next = head;
+    head = member;
+}
+
+template <typename T> Node<T> *LinkedList<T>::Last()
+{
+    Node<T> *current = head;
+    while (current->next != nullptr)
+    {
+        current = current->next;
+    }
+    return current;
+}
+
+template <typename T> void LinkedList<T>::InsertAt(const int index, T value)
+{
+    if (index == 0)
+    {
+        Prepend(value);
+        return;
+    }
+    auto newMember = new Node<T>{value};
+    if (head == nullptr)
+    {
+        std::__throw_bad_exception();
+    }
+    int currentIndex = 1;
+    Node *current = head;
+    do
+    {
+        if (currentIndex == index)
         {
-            head = member;
-            head->next = nullptr;
+            member->next = current;
+            current->next = member;
             return;
         }
-        Node *last = Last();
-        if (last->next != nullptr)
-        {
-            std::__throw_bad_exception();
-        }
-        last->next = member;
-    }
-
-    void LinkedList::Prepend(Node *member)
-    {
-        member->next = head;
-        head = member;
-    }
-
-    Node *LinkedList::Last()
-    {
-        Node *current = head;
-        while (current->next != nullptr)
-        {
-            current = current->next;
-        }
-        return current;
-    }
-
-    void LinkedList::InsertAt(const int index, Node *member)
-    {
-        if (index == 0)
-        {
-            Prepend(member);
-            return;
-        }
-        if (head == nullptr)
-        {
-            std::__throw_bad_exception();
-        }
-        int currentIndex = 1;
-        Node *current = head;
-        do
-        {
-            if (currentIndex == index)
-            {
-                member->next = current;
-                current->next = member;
-                return;
-            }
-            current = current->next;
-            currentIndex++;
-        } while (current->next != nullptr);
-    }
-} // Logic
+        current = current->next;
+        currentIndex++;
+    } while (current->next != nullptr);
+}
+} // namespace Logic
